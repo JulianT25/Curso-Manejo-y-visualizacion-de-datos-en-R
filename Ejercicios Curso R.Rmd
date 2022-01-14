@@ -1,0 +1,107 @@
+---
+title: "Curso Manejo y visualización de datos en R"
+author: "Julian Tijerín"
+date: "14/1/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##    Ejercicio 1: Tabla y manejo de Tidyverse
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+data(package = 'palmerpenguins')
+
+penguins_total <-  penguins %>%
+  select(sex, species, bill_depth_mm, flipper_length_mm, body_mass_g) %>% 
+  group_by(species) %>% 
+  count(species) 
+
+penguins <- na.omit(penguins)
+penguins_statistics <- penguins %>% 
+  select(sex, species,bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) %>% 
+  group_by(species) %>% 
+  summarise(bill_depth_mean = mean(bill_depth_mm),
+            bill_depth_sd = sd(bill_depth_mm),
+            bill_depth_min = min(bill_depth_mm),
+            bill_depth_max = max(bill_depth_mm),
+            bill_lenght_mean = mean(bill_length_mm),
+            bill_lenght_sd = sd(bill_length_mm),
+            bill_lenght_min = min(bill_length_mm),
+            bill_lenght_max = max(bill_length_mm),
+            body_mass_mean = mean(body_mass_g),
+            body_mass_sd = sd(body_mass_g),
+            body_mass_min = min(body_mass_g),
+            body_mass_max = max(body_mass_g),
+            flipper_length_mean = mean(flipper_length_mm),
+            flipper_length_sd = sd(flipper_length_mm),
+            flipper_length_min = min(flipper_length_mm),
+            flipper_length_max = max(flipper_length_mm))
+
+penguins_statistics
+```
+
+
+##    Ejercicio2: Gráfico de barras
+```{r}
+penguins_island <- penguins %>% 
+  group_by(species, island) %>% 
+  ggplot(aes(x = island, fill = species)) +
+  ggtitle("Number of individuals x species x island") +
+  geom_bar(position = "dodge") +
+  labs(x="Island", y="Number of individuals") +
+  scale_fill_manual(values = c("magenta3" ,"deepskyblue3", "tan2"))
+
+penguins_island
+```
+
+
+
+###   Preguntas ejercicio 2
+
+a) ¿Qué especie se ha muestreado en las tres islas?
+
+- La única especie que ha sido muestreada en las tres islas ha sido Adelie.
+
+b) ¿Cuántos individuos se han muestreado en la isla Dream?
+
+- En la isla Dream se han muestreado un total de 123 individuos.
+```{r}
+penguins_Dream <-  penguins %>%
+  group_by(island) %>%
+  count(island) 
+penguins_Dream
+```
+
+
+##    Ejercicio3: Gráfico de caja y bigotes
+```{r}
+penguins_sex <- penguins %>% 
+  group_by(body_mass_g, sex) %>% 
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  ggtitle("Body mass x sex x species") +
+  geom_boxplot() +
+  facet_wrap(~species) +
+  labs(x="", y="Body mass") +
+  scale_fill_manual(values = c("magenta3" ,"deepskyblue3", "tan2"))
+
+penguins_sex
+```
+
+
+
+###   Preguntas ejercicio 3
+
+a) ¿Qué especie tiene mayor tamaño?
+```{r}
+
+```
+
+- La especie que muestra un mayor tamaño es Gentoo.
+
+b) ¿En qué especie las hembras y los machos tienen un tamaño más similar?
+
+- La especie en la que las hembras y los machos muestran un tamaño más similar es Chintrap.
